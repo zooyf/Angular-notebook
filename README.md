@@ -63,5 +63,10 @@ git clone --depth 1 https://github.com/Microsoft/TypeScript-Sublime-Plugin.git T
 
 跟着教程完成了五分钟上手TypeScript，加上写笔记总共花掉了将近一个小时，要加快速度了。
 
-编辑器根据个人喜好，我喜欢用sublime记东西，敲代码还是喜欢IDE，想尝试下vscode，毕竟ts也是微软自家的东西，应该会更好用吧。找到一篇博客:[vscode+typescript环境搭建](http://blog.wolksoftware.com/setting-up-your-typescript-vs-code-development-environment)，抽空再看。
+编辑器根据个人喜好，我喜欢用sublime记东西，敲代码还是喜欢集成开发环境，想尝试下vscode，毕竟ts也是微软自家的东西，应该会更好用吧。找到一篇博客:[vscode+typescript环境搭建](http://blog.wolksoftware.com/setting-up-your-typescript-vs-code-development-environment)，抽空再看。
 
+## 11.15
+
+今天杂七杂八忙活完22点了，看一下[angular-快速上手](https://angular.cn/guide/quickstart)。
+
+昨天把npm下载了，今天过程很顺利，照着教程超快速撸完。
