@@ -22,6 +22,9 @@
 
 * [Angular](https://angular.cn/)：官网+书籍
 
+### 学习路径
+![](angular学习路径.png)
+
 ### 2. [五分钟上手TypeScript](https://tslang.cn/docs/handbook/typescript-in-5-minutes.html)
 
 #### 安装
@@ -49,5 +52,16 @@ $ npm install -g typescript
 
 #### 第一个TypeScript文件
 
-本人使用sublime编辑器
+本人习惯使用sublime编辑器，先用sublime新建一个greeter.ts的文件，敲代码，发现没有颜色，好不习惯，下载插件[TypeScript-Sublime-Plugin](https://github.com/Microsoft/TypeScript-Sublime-Plugin)。发现这里有好多快捷键，先不管了，留下以后看，继续5 minutes.
+
+```
+cd ~/"Library/Application Support/Sublime Text 2/Packages"
+git clone --depth 1 https://github.com/Microsoft/TypeScript-Sublime-Plugin.git TypeScript
+```
+
+#### 小结
+
+跟着教程完成了五分钟上手TypeScript，加上写笔记总共花掉了将近一个小时，要加快速度了。
+
+编辑器根据个人喜好，我喜欢用sublime记东西，敲代码还是喜欢IDE，想尝试下vscode，毕竟ts也是微软自家的东西，应该会更好用吧。找到一篇博客:[vscode+typescript环境搭建](http://blog.wolksoftware.com/setting-up-your-typescript-vs-code-development-environment)，抽空再看。
 
