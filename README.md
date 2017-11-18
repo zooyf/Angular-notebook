@@ -96,7 +96,7 @@ ng serve --open
 
 使用--open（或-o）参数可以自动打开浏览器并访问http://localhost:4200/。
 
-## 11.18
+## 11.18-1 英雄编辑器
 
 开始撸[英雄编辑器](https://angular.cn/tutorial/toh-pt1)
 
@@ -192,3 +192,103 @@ import { AppComponent }  from './app.component';
 })
 export class AppModule { }
 ```
+
+## 11.18-2.主从结构
+
+1.创建英雄列表
+
+```
+const HEROES: Hero[] = [
+  { id: 11, name: 'Mr. Nice' },
+  { id: 12, name: 'Narco' },
+  { id: 13, name: 'Bombasto' },
+  { id: 14, name: 'Celeritas' },
+  { id: 15, name: 'Magneta' },
+  { id: 16, name: 'RubberMan' },
+  { id: 17, name: 'Dynama' },
+  { id: 18, name: 'Dr IQ' },
+  { id: 19, name: 'Magma' },
+  { id: 20, name: 'Tornado' }
+];
+```
+
+2.暴露英雄以供绑定`heroes = HEROES;`
+
+3.在模板中显示英雄
+
+```
+<h2>My Heroes</h2>
+<ul class="heroes">
+  <li>
+    <!-- each hero goes here -->
+  </li>
+</ul>
+```
+
+4.通过 ngFor 来显示英雄列表
+
+```
+<li *ngFor="let hero of heroes">
+```
+
+> ngFor的*前缀表示<li>及其子元素组成了一个主控模板。
+
+> ngFor指令在AppComponent.heroes属性返回的heroes数组上迭代，并输出此模板的实例。
+
+> 引号中赋值给ngFor的那段文本表示“从heroes数组中取出每个英雄，存入一个局部的hero变量，并让它在相应的模板实例中可用”。
+
+> 要学习更多关于ngFor和模板输入变量的知识，参见[显示数据](https://angular.cn/guide/displaying-data)一章的[用*ngFor显示数组属性](https://angular.cn/guide/displaying-data#ngFor)和 [模板语法](https://angular.cn/guide/template-syntax)章的[ngFor](https://angular.cn/guide/template-syntax#ngFor)。
+
+5.选择英雄
+
+处理点击事件
+
+```
+<li *ngFor="let hero of heroes" (click)="onSelect(hero)">
+  ...
+</li>
+```
+
+添加一个onSelect方法，用于将用户点击的英雄赋给selectedHero属性。
+
+```
+onSelect(hero: Hero): void {
+  this.selectedHero = hero;
+}
+```
+
+替换hero为selectedHero，修改模板绑定到新的selectedHero属性
+
+```
+<h2>{{selectedHero.name}} details!</h2>
+<div><label>id: </label>{{selectedHero.id}}</div>
+<div>
+    <label>name: </label>
+    <input [(ngModel)]="selectedHero.name" placeholder="name"/>
+</div>
+```
+
+使用 ngIf 隐藏空的详情
+
+```
+<div *ngIf="selectedHero">
+  <h2>{{selectedHero.name}} details!</h2>
+  <div><label>id: </label>{{selectedHero.id}}</div>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="selectedHero.name" placeholder="name"/>
+  </div>
+</div>
+```
+
+给所选英雄添加样式
+
+```
+<li *ngFor="let hero of heroes"
+  [class.selected]="hero === selectedHero"
+  (click)="onSelect(hero)">
+  <span class="badge">{{hero.id}}</span> {{hero.name}}
+</li>
+```
+
+
