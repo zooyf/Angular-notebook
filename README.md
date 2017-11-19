@@ -291,4 +291,103 @@ onSelect(hero: Hero): void {
 </li>
 ```
 
+## 11.19 1.多个组件
+
+### 1.制作英雄详情组件
+
+往app/文件夹下添加一个名叫hero-detail.component.ts的文件。这个文件中会存放这个新的HeroDetailComponent。
+
+文件名和组件名遵循[风格指南](https://angular.cn/guide/styleguide#naming)中的标准方式。
+
+* 组件的类名应该是大驼峰形式，并且以Component结尾。 因此英雄详情组件的类名是HeroDetailComponent。
+* 组件的文件名应该是小写中线形式，每个单词之间用中线分隔，并且以.component.ts结尾。 因此HeroDetailComponent类应该放在hero-detail.component.ts文件中。
+
+HeroDetailComponent的代码如下：
+
+***app/hero-detail.component.ts (initial version)***
+
+```
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'hero-detail',
+})
+export class HeroDetailComponent {
+}
+```
+
+### 2.英雄详情的模板
+
+把英雄详情的视图移入HeroDetailComponent，把对应的selectedHero改为hero
+
+### 3.添加Hero属性
+
+在***hero-detail.component.ts***文件中添加`hero: Hero;`属性。
+
+创建hero.ts，把Hero类移出。
+
+在`app.component.ts`和`hero-detail.component.ts`中导入Hero
+
+```
+import { Hero } from './hero';
+```
+
+### 4.hero属性是一个***输入***属性
+
+在***src/app/app.component.html***的绑定如下:
+
+```
+<hero-detail [hero]="selectedHero"></hero-detail>
+```
+
+在等号的左边，是方括号围绕的hero属性，这表示它是属性绑定表达式的目标。 我们要绑定到的目标属性必须是一个输入属性，否则Angular会拒绝绑定，并抛出一个错误。
+
+首先，修改@angular/core导入语句，使其包含符号Input。
+
+***src/app/hero-detail.component.ts (excerpt)***
+
+```
+import { Component, Input } from '@angular/core';
+```
+
+然后，通过在hero属性前面加上@Input装饰器，来表明它是一个输入属性。
+
+***src/app/hero-detail.component.ts (excerpt)***
+
+```
+@Input() hero: Hero;
+```
+
+### 5.在AppModule中声明HeroDetailComponent
+
+每个组件都必须在一个（且只有一个）Angular模块中声明。
+
+打开app.module.ts并且导入HeroDetailComponent，以便我们可以引用它。
+
+***src/app/app.module.ts***
+
+```
+import { HeroDetailComponent } from './hero-detail.component';
+```
+
+把HeroDetailComponent添加到该模块的declarations数组中。
+
+***src/app/app.module.ts***
+
+```
+declarations: [
+  AppComponent,
+  HeroDetailComponent
+],
+```
+
+### 6.把HeroDetailComponent添加到AppComponent中
+
+把<hero-detail>元素添加到AppComponent模板的底部，那里就是英雄详情视图所在的位置。
+
+***app.component.ts (excerpt)***
+
+```
+<hero-detail [hero]="selectedHero"></hero-detail>
+```
 
