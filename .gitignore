@@ -9,6 +9,9 @@
 /app/**/*.js
 /app/**/*.js.map
 
+*.js
+*.js.map
+
 # dependencies
 /node_modules
 /bower_components

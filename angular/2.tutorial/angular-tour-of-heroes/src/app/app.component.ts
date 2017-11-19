@@ -24,14 +24,12 @@ const HEROES: Hero[] = [
   <h1>{{title}}</h1>
   <div *ngIf="selectedHero">
       <h2>{{selectedHero.name}} details!</h2>
+      <div><label>id: </label>{{selectedHero.id}}</div>
+      <div>
+          <label>name: </label>
+          <input [(ngModel)]="selectedHero.name" placeholder="name"/>
+      </div>
   </div>
-<!--2.英雄编辑器: 使用input组件编辑；ngModel实现双向绑定
-  <div><label>id: </label>{{hero.id}}</div>
-  <div>
-      <label>name: </label>
-      <input [(ngModel)]="hero.name" placeholder="name">
-  </div>
--->
   <ul class="heroes">
     <li *ngFor="let hero of heroes" 
       [class.selected]="hero === selectedHero"
