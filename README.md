@@ -391,3 +391,187 @@ declarations: [
 <hero-detail [hero]="selectedHero"></hero-detail>
 ```
 
+## 11.20.1.坑了我一小时的bug
+
+```
+Jason-Yu-MJLU2:angular-tour-of-heroes yufan$ npm start
+
+> angular-quickstart@1.0.0 prestart /Users/yufan/STUDY/remote proj/Angular-notebook/angular/2.tutorial/angular-tour-of-heroes
+> npm run build
+
+
+> angular-quickstart@1.0.0 build /Users/yufan/STUDY/remote proj/Angular-notebook/angular/2.tutorial/angular-tour-of-heroes
+> tsc -p src/
+
+src/app/app.component.ts(95,25): error TS2304: Cannot find name 'Void'.
+npm ERR! code ELIFECYCLE
+npm ERR! errno 2
+npm ERR! angular-quickstart@1.0.0 build: `tsc -p src/`
+npm ERR! Exit status 2
+npm ERR! 
+npm ERR! Failed at the angular-quickstart@1.0.0 build script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/yufan/.npm/_logs/2017-11-20T13_38_17_141Z-debug.log
+npm ERR! code ELIFECYCLE
+npm ERR! errno 2
+npm ERR! angular-quickstart@1.0.0 prestart: `npm run build`
+npm ERR! Exit status 2
+npm ERR! 
+npm ERR! Failed at the angular-quickstart@1.0.0 prestart script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/yufan/.npm/_logs/2017-11-20T13_38_17_162Z-debug.log
+```
+
+接触angular一周就遇到了npm start失败，google了好多方法都不管用，仔细看了log三遍，在第三遍注意到了这一行`src/app/app.component.ts(95,25): error TS2304: Cannot find name 'Void'.
+`，在文件中找到了Void的位置，改为void，解决/(ㄒoㄒ)/~~
+
+> mark：
+> 
+> 用的mac本，周末两天没关电脑，这个bug在`npm start`服务运行中没有导致崩溃或者其他问题，今早关了服务，晚上再开启才发现这个问题。
+
+## 11.20.2.服务
+
+### 1.创建服务
+
+***src/app/hero.service.ts
+```
+import {Injectable} from '@angular/core';
+
+@Injectable()
+export class HeroService {}
+```
+
+### 2.获取数据
+
+将HEROES常量从`app.component.ts`中剪切粘贴到`mock-heroes.ts`
+
+***src/app/mock-heroes.ts***
+
+```
+import { Hero } from './hero';
+ 
+export const HEROES: Hero[] = [
+  { id: 11, name: 'Mr. Nice' },
+  { id: 12, name: 'Narco' },
+  { id: 13, name: 'Bombasto' },
+  { id: 14, name: 'Celeritas' },
+  { id: 15, name: 'Magneta' },
+  { id: 16, name: 'RubberMan' },
+  { id: 17, name: 'Dynama' },
+  { id: 18, name: 'Dr IQ' },
+  { id: 19, name: 'Magma' },
+  { id: 20, name: 'Tornado' }
+];
+```
+
+并修改`app.component.ts`中的heroes
+
+```
+  heroes: Hero[];
+```
+
+### 3.在hero.service.ts中返回英雄数据
+
+```
+import { Injectable } from '@angular/core';
+
+import { Hero } from './hero';
+import { HEROES } from './mock-heroes';
+
+@Injectable()
+export class HeroService {
+  getHeroes(): Hero[] {
+    return HEROES;
+  }
+}
+```
+
+### 4.注入HeroService
+
+```
+import { HeroService } from './hero.service';
+
+@Component({
+  ...
+  providers: [HeroService]
+})
+
+export class AppComponent {
+  ...
+  constructor(private heroService: HeroService) { }
+  
+  getHeroes(): void {
+    this.heroes = this.heroService.getHeroes();
+  }
+  ...
+```
+
+### 5.ngOnInit生命周期钩子
+
+只要我们实现了 Angular 的 ngOnInit 生命周期钩子，Angular 就会主动调用这个钩子。 Angular提供了一些接口，用来介入组件生命周期的几个关键时间点：刚创建时、每次变化时，以及最终被销毁时。
+
+添加`OnInit`接口的实现
+
+```
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    this.getHeroes();
+  }
+}
+```
+
+### 6.异步服务与承诺
+
+> 这里只是粗略说说，要了解更多 ES2015 Promise 的信息，见[ES6概览](http://http//exploringjs.com/es6.html)中的[承诺与异步编程](http://exploringjs.com/es6/ch_promises.html)。
+
+把HeroService的getHeroes方法改写为返回承诺的形式：
+
+***src/app/hero.service.ts (excerpt)***
+
+```
+getHeroes(): Promise<Hero[]> {
+  return Promise.resolve(HEROES);
+}
+```
+
+修改HeroService之后，this.heroes会被赋值为一个Promise而不再是英雄数组。
+
+我们得修改这个实现，把它变成基于承诺的，并在承诺的事情被解决时再行动。 一旦承诺的事情被成功解决（Resolve），我们就会显示英雄数据。
+
+我们把回调函数作为参数传给承诺对象的then方法：
+
+***src/app/app.component.ts (getHeroes - revised)***
+
+```
+getHeroes(): void {
+  this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+}
+```
+
+> 回调中所用的 ES2015 箭头函数 比等价的函数表达式更加简洁，能优雅的处理 this 指针。
+
+在回调函数中，我们把服务返回的英雄数组赋值给组件的heroes属性。
+
+模拟慢速链接:
+
+```
+getHeroesSlowly(): Promise<Hero[]> {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(this.getHeroes()), 2000);
+  }
+}
+```
+
+> 问题:
+> 
+> 不知道为什么，跟着教程走，像这种报错我从来不会遇到，明明和教程是完全一样的步骤。先记下来，以后研究。
+> 
+> ```
+> EXCEPTION: No provider for HeroService! (AppComponent - HeroService)
+> ```
+
+
