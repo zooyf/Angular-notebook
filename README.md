@@ -575,3 +575,14 @@ getHeroesSlowly(): Promise<Hero[]> {
 > ```
 
 
+## 11.21.路由
+
+### 1.行动计划
+
+* 把AppComponent变成应用程序的“壳”，它只处理导航
+* 把现在由AppComponent关注的英雄们移到一个独立的HeroesComponent中
+* 添加路由
+* 创建一个新的DashboardComponent组件
+* 把仪表盘加入导航结构中
+
+### 2.
