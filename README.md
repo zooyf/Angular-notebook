@@ -6,7 +6,7 @@
 
 #### 操作环境
 
-* mac OS
+* mac OS High Sierra
 
 ## 11.14
 
